@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         list.setLayoutManager(new LinearLayoutManager(this));
 
-        mAdapter = new ImageAdapter();
+        mAdapter = new ImageAdapter(this);
         list.setAdapter(mAdapter);
 
         FloatingActionButton fabCrop = findViewById(R.id.action_crop);

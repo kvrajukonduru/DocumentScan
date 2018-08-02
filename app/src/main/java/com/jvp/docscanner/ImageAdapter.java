@@ -1,19 +1,25 @@
 package com.jvp.docscanner;
 
 
+import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import android.widget.TextView;
+import com.jvp.docscanner.ImageAdapter.ImageViewHolder;
 import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -31,9 +37,15 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
 
   private List<ImageObject> imageObjects = new ArrayList<>();
 
+  private AppCompatActivity activity;
+
+  public ImageAdapter(AppCompatActivity activity){
+    this.activity = activity;
+  }
   @Override
   public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_row, parent,false);
+    View view = LayoutInflater.from(parent.getContext())
+        .inflate(R.layout.item_image_row, parent, false);
     return new ImageViewHolder(view);
   }
 
@@ -49,7 +61,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
       Calendar cal = Calendar.getInstance();
       cal.setTimeInMillis(imageObject.date);
       DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy");
-      holder.dateView.setText("Last Modified: "+df.format(cal.getTime()));
+      holder.dateView.setText("Last Modified: " + df.format(cal.getTime()));
+
     }
   }
 
@@ -83,19 +96,36 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
 
     Log.d("ADAPTER", "cleared all images");
   }
-}
 
-class ImageViewHolder extends RecyclerView.ViewHolder {
+  class ImageViewHolder extends RecyclerView.ViewHolder {
 
-  ImageView imageView;
-  TextView textView;
-  TextView dateView;
+    ImageView imageView;
+    TextView textView;
+    TextView dateView;
 
-  public ImageViewHolder(View itemView) {
-    super(itemView);
-   imageView = itemView.findViewById(R.id.iv_base);
-    textView = itemView.findViewById(R.id.tv_title);
-    dateView = itemView.findViewById(R.id.tv_date);
+    public ImageViewHolder(View itemView) {
+      super(itemView);
+      imageView = itemView.findViewById(R.id.iv_base);
+      textView = itemView.findViewById(R.id.tv_title);
+      dateView = itemView.findViewById(R.id.tv_date);
+
+      itemView.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          final ImageObject imageObject = imageObjects.get(getAdapterPosition());
+          ImageDialogFragment imageDialogFragment = ImageDialogFragment.newInstance(imageObject.imageURI);
+
+          android.support.v4.app.FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+          Fragment previousFragment = activity.getSupportFragmentManager().findFragmentByTag("info");
+          if (previousFragment != null) {
+            ft.remove(previousFragment);
+          }
+          ft.addToBackStack(null);
+          imageDialogFragment.show(ft, "info");
+
+        }
+      });
+    }
   }
 }
 
