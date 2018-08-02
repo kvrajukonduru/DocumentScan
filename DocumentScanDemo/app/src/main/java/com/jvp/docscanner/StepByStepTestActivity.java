@@ -210,7 +210,7 @@ public class StepByStepTestActivity extends AppCompatActivity{
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mAdapter.add(uri);
+//                    mAdapter.add(uri);
                 }
             });
         } catch (IOException e) {

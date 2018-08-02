@@ -60,27 +60,6 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new ImageAdapter();
         list.setAdapter(mAdapter);
 
-//        FloatingActionButton fabScan = findViewById(R.id.action_scan);
-//        fabScan.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new AlertDialog.Builder(MainActivity.this)
-//                        .setMessage("Are you scanning a Passport?")
-//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                startScannerIntent(true);
-//                            }
-//                        })
-//                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                startScannerIntent(false);
-//                            }
-//                        }).show();
-//            }
-//        });
-
         FloatingActionButton fabCrop = findViewById(R.id.action_crop);
         fabCrop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,38 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQ_PERMISSIONS);
         }
-
-
     }
-
-
-
-//    private void requestCameraPermission() {
-//        Log.w(TAG, "Camera permission is not granted. Requesting permission");
-//
-//        final String[] permissions = new String[]{Manifest.permission.CAMERA};
-//
-//        if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                Manifest.permission.CAMERA)) {
-//            ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_CAMERA_PERM);
-//            return;
-//        }
-//
-//        final Activity thisActivity = this;
-//
-//        new AlertDialog.Builder(this)
-//                .setTitle("Camera Permission Required")
-//                .setMessage("access to device camera is required for scanning")
-//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        ActivityCompat.requestPermissions(thisActivity, permissions,
-//                                RC_HANDLE_CAMERA_PERM);
-//                    }
-//                }).show();
-//    }
-
-
 
     void startImagePickerIntent(){
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -247,7 +195,11 @@ public class MainActivity extends AppCompatActivity {
                         String path = data.getStringExtra(CVScanner.RESULT_IMAGE_PATH);
                         File file = new File(path);
                         Uri imageUri = Util.getUriForFile(this, file);
-                        if(imageUri != null) mAdapter.add(imageUri);
+                        ImageObject imageObject = new ImageObject();
+                        imageObject.imageURI = imageUri;
+                        imageObject.name = file.getName();
+                        imageObject.date = file.lastModified();
+                        if(imageUri != null) mAdapter.add(imageObject);
                         Log.d("MAIN", "added: " + imageUri);
                     }
                     break;
