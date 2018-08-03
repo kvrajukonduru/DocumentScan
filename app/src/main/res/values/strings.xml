@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Raju DocScanDemo</string>
+    <string name="app_name">DocumentScanDemo</string>
     <string name="action_step_by_step">Step by Step</string>
     <string name="action_settings">Settings</string>
 </resources>
